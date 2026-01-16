@@ -16,4 +16,9 @@ public class HelloWorldController {
 	public String helloIsrat() {
 		return "Hello Israt!!";
 	}
+	
+	@GetMapping(path = "/my-name")
+	public MyNameBean myNameBean() {
+		return new MyNameBean("Israt Jahan Erin");
+	}
 }
