@@ -1,6 +1,7 @@
 package com.rest.wesbservices.rest_web_services.helloworld;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,5 +21,10 @@ public class HelloWorldController {
 	@GetMapping(path = "/my-name")
 	public MyNameBean myNameBean() {
 		return new MyNameBean("Israt Jahan Erin");
+	}
+	
+	@GetMapping(path = "/my-name/{username}")
+	public MyNameBean myNameBeanPathVariable(@PathVariable String username) {
+		return new MyNameBean(String.format("Hi I am %s", username));
 	}
 }
