@@ -2,10 +2,17 @@ package com.rest.wesbservices.rest_web_services.user;
 
 import java.time.LocalDate;
 
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Size;
+
 public class User {
 
 	private Integer id;
+
+	@Size(min = 3, message = "Name should have atleast 3 characters")
 	private String name;
+
+	@Past(message = "Birth should be a past date")
 	private LocalDate birthdate;
 
 	public User(Integer id, String name, LocalDate birthdate) {
