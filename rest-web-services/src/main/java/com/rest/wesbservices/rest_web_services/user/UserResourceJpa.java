@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.rest.wesbservices.rest_web_services.jpa.PostRepository;
 import com.rest.wesbservices.rest_web_services.jpa.UserRepository;
 
 import jakarta.validation.Valid;
@@ -26,9 +27,11 @@ import jakarta.validation.Valid;
 public class UserResourceJpa {
 
 	private UserRepository repository;
+	private PostRepository postRepository;
 
-	public UserResourceJpa(UserRepository repository) {
+	public UserResourceJpa(UserRepository repository, PostRepository postRepository) {
 		this.repository = repository;
+		this.postRepository = postRepository;
 	}
 
 	@GetMapping("/jpa/users")
@@ -58,6 +61,42 @@ public class UserResourceJpa {
 	@DeleteMapping("/jpa/users/{id}")
 	public void deleteUserById(@PathVariable int id) {
 		repository.deleteById(id);
+
+	}
+
+	// API for posts
+
+	@GetMapping("/jpa/users/{id}/posts")
+	public List<Post> retrieveUserPostsById(@PathVariable int id) {
+		Optional<User> user = repository.findById(id);
+		if (user == null)
+			throw new UserNotFoundException("The User not found for id: " + id);
+		return user.get().getPosts();
+	}
+
+	@PostMapping("/jpa/users/{id}/posts")
+	public ResponseEntity<Object> CreatePosts(@PathVariable int id, @Valid @RequestBody Post post) {
+		Optional<User> user = repository.findById(id);
+		if (user == null)
+			throw new UserNotFoundException("The User not found for id: " + id);
+		post.setUser(user.get());
+
+		Post createdPost = postRepository.save(post);
+
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(createdPost.getId()).toUri();
+		return ResponseEntity.created(location).build();
+
+	}
+
+	@GetMapping("/jpa/users/{id}/posts/{postId}")
+	public Post getUsePostById(@PathVariable int id, @PathVariable int postId) {
+		Optional<User> user = repository.findById(id);
+		if (user == null)
+			throw new UserNotFoundException("The User not found for id: " + id);
+		List<Post> posts = user.get().getPosts();
+
+		return posts.stream().filter(post -> post.getId() == postId).findFirst().get();
 
 	}
 
