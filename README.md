@@ -80,30 +80,4 @@ A RESTful web service built with **Java Spring Boot** for managing users and the
 
 ```
 
-
-## Project Structure
-
-```
-
-src/main/java/com/rest/wesbservices/rest_web_services/
-|
-+-- RestWebServicesApplication.java # Application entry point
-|
-+-- exception/ # Global exception handling
-| +-- CustomErrorDetails.java
-| +-- CustomResponseEntityExceptionHandler.java
-|
-+-- jpa/ # Repository layer
-| +-- PostRepository.java
-| +-- UserRepository.java
-|
-+-- user/ # Domain & API layer
-+-- User.java # User entity with @OneToMany
-+-- Post.java # Post entity with @ManyToOne
-+-- UserResourceJpa.java # REST controller (endpoints)
-+-- UserNotFoundException.java # Custom exception
-+-- UserDaoService.java # In-memory DAO service
-
-```
-
 ```
